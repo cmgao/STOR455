@@ -1,11 +1,7 @@
 ---
 title: 'Case Study 1: College Basketball'
 author: "prepared by Kelly Bodwin"
-output:
-  html_document: default
-  pdf_document: default
-  word_document: default
-  keep_md: true
+output: rmarkdown::github_document
 ---
 
 In this Case Study, you will refresh your memory of STOR 155 while you learn some basic commands and tools for analyzing data with **R**.  We'll be looking at some data from college basketball games last year.
