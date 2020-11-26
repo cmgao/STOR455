@@ -1,1 +1,495 @@
+---
+title: 'Case Study 1: College Basketball'
+author: "prepared by Kelly Bodwin"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+  keep_md: true
+---
 
+In this Case Study, you will refresh your memory of STOR 155 while you learn some basic commands and tools for analyzing data with **R**.  We'll be looking at some data from college basketball games last year.
+
+Run the following **R** code to load the data into your RStudio and take a look at it.
+
+## Summarizing data
+
+```{r, eval = TRUE}
+# Load dataset
+bball = read.csv("basketball.csv")
+
+# Look at dataset
+head(bball)
+summary(bball)
+
+```
+
+The command `read.csv( )` will read a dataset into R from your computer or from online.  "csv" stands for "comma separated value", a common file type where the data is listed in a text file, with variables separated by commas.  For now, you don't need to worry about the details of `read.csv( )`.  Once you have loaded the data, the command `summary( )` will tell you about the variables in the dataset and their values.  Another useful function is `head( )`, which shows you the first 6 rows of the dataset.
+
+***
+
+### Question 1:  
+
+a) Look at the outputs of `summary(bball)` and `head(bball)`, and describe the variables using vocabulary from STOR 155.  
+```
+The outputs of summary(bball) and head(bball) give the interquartile range of the data set (min, median, max) as well as the mean or average scores of the basketball teams. The value x gives the total number of games played by all the teams in the data set. The Team.Score value shows the interquartile range of scores earned by each team 
+```
+
+b) If `head( )` shows the first 6 rows of the dataset, what command do you think might show the *last* 6 rows?  Try out your proposed function and see what happens
+```
+The function 'tail(bball)' shows the last 6 rows of the dataset. 
+```
+
+c) Try the commands `ncol( )` and `nrow( )`.  What do these do?  How could you get the same information from `head( )`, `summary( )`, and/or the command you figured out in part (b)?
+```
+ncol(bball) gives the number of columns in the dataset, while nrow(bball) gives the number of rows. You could get the same information head(bball) because the command head() will always give you the first few rows of the dataset, giving you the entire set of columns from the dataset. The command summary(bball) shows the interquartile range of the total number of games played given by the x variable, which is the number of rows in the data set. This information is also given by tail(bball), which shows the last 6 rows of the dataset and therefore the total number of games.
+```
+
+***
+
+Sometimes, we will want to look at individual entries, rows, or columns of our data matrix.  We can do this using brackets `[ ]` after our dataset.  We can also look at a variables (columns) by name using the *$* symbol.  Try the following examples.
+
+```{r, eval = TRUE}
+# Look at a single row
+bball[123, ]
+
+# Look at a single column
+bball[ , 4]
+bball$Team.Score
+
+# Look at a single entry
+bball[123, 4]
+bball$Team.Score[123]
+
+# Calculate mean, median, variance, and standard deviation
+mean(bball$Team.Score)
+median(bball$Team.Score)
+var(bball$Team.Score)
+sd(bball$Team.Score)
+
+# mean = 72.53832, median = 72, variance = 171.8493, sd = 13.10913
+
+```
+
+***
+
+### Question 2:
+
+a) What is the difference between `mean(bball$Team.Score)` and `mean(bball[,4])`?  Why might it be useful to have two ways to get access the variable `Team.Score`?
+```
+The functions mean(bball$Team.Score) and mean(bball[,5]) both calculate the average value of the points scored by all basketball teams, thus there is not difference in the results of each command. It might be usefull to access the variable 'Team.Score' multiple ways in the event there is not a label for each column, enabling us to quickly access a selected column of data. 
+```
+
+b) In plain English, what were the events of the game represented by the first row of the dataset?
+```
+On November 13, 2015, the teams Old Dominion and Niagara played in a neutral, or non-college site, location. Old Dominion scored 67 points, while Niagara scored 50, resulting in a win for Old Dominion.
+```
+*(Note:  If you don't know much about basketball - for example, if you don't know what it means to play a game "Home" versus "Away" - ask people around you.)*
+
+
+***
+
+
+All these commands we have been using, like `summary( )` and `mean( )` are called *functions*.  A function can take all different kinds of input depending on what you are trying to do: datasets, vectors such as `bball$Team.Score`, etc. An important skill in **R** is figuring out for yourself how functions work.
+
+For example, type `?boxplot` into your **R** console.  A help page will pop up telling you about this function.  Notice that under **Usage**, it says `boxplot(x, ...)`.  This tells you that you need to supply something called *x* to the function, and the rest of the input is optional.  But what is *x*?  Ah-ha!  There is a section called **Arguments**, which tells us that *x* is the vector of values you want to put in a boxplot.
+
+Run the code below to make a boxplot of the team scores of college basketball games.
+
+```{r, eval = TRUE}
+
+# make boxplot of team scores
+boxplot(bball$Team.Score)
+
+
+```
+
+
+***
+
+### Question 3: 
+
+a) Now check out `?hist`, a function for making histograms.  Below is basic code to make a histogram of `Team.Scores`, and also code for the same histogram but with a lot of the optional input changed.  Mess around with these inputs until you understand what each is doing.   
+
+```{r, eval = TRUE}
+
+# Boring histogram
+hist(bball$Team.Score)
+
+# Fancy histogram
+hist(bball$Team.Score, breaks = 5, main = "I am a title", xlab = "I am an x-axis label", col = "grey", freq = TRUE)
+
+```
+Explain in your own words what `breaks` and `freq` change about the histogram.
+```
+'breaks' changes the number of breakpoints for the histogram. For example, the "#Boring histogram" displayed 10 bars with eleven break points, while the "#Fancy histogram" displays 6 bars with 5 break points. The frequency on the y-axis displays the number of occurrences with respect to the points scored by each team. Changing freq to "FALSE" changes the y-axis to density, which shows units that make the total area of all the bars add up to 1. 
+```
+
+b) The optional inputs `main`, `xlab`, `ylab`, and `col` are common to most plotting functions.  Use what you learned in (a) to make a boxplot of `Team.Scores` with proper axis labels and title.
+
+```{r, eval = TRUE}
+
+# make boxplot of team scores
+boxplot(bball$Team.Score, main = "Box Plot for Team Scores", xlab = "All Teams", ylab = "Scores", col = "grey")
+
+```
+
+c) To check if the histogram is Normal, or to help visualize its shape, we might want to overlay a Normal curve on top of the histogram.  The code below will do so - but the curve doesn't fit very well.  
+```{r, eval = TRUE}
+
+# Boring histogram
+hist(bball$Team.Score, freq = FALSE)
+
+# overlay Normal Curve
+curve(dnorm(x, mean=120, sd=20), 
+      add = TRUE, col = "blue", lwd = 2)
+
+```
+Explain what the role is of the functions `curve( )` and `dnorm( )`.  Why did we put `add = TRUE` in the inputs?
+```
+The function 'curve()' draws out the Normal curve overlaying the histogram, and the function 'dnorm()' gives the desnity of the normal distribution given mean and standard deviation of the dataset. The addition of input 'add = TRUE' is a logical argument, meaning if there exists a plot with labeled limits and a scaled x-axis. 
+```
+
+d) Alternatively, we can overlay a line that is a "smoothed" version of the data, as follows:
+
+```{r, eval = TRUE}
+
+# overlay smoothed curve
+hist(bball$Team.Score, freq = FALSE)
+
+lines(density(bball$Team.Score),
+      col = "red", lwd = 2, lty = 2)
+
+```
+
+What is the difference between `lines( )` and `curve( )`?  When might we want to use `density( )`, and when would it be better to overlay a Normal curve on a histogram?
+```
+The function 'lines()' is a generic function that takes coordinates from the given histogram plot and adds a density curve to the dataset. The function 'curve()' shows the normal distribution line given the data from the histogram. Using a density histogram allows us to overlay a normal distribution curve over the histogram since the curve is a normal density function, which in turn allows us to see if our data is indeed a normal distribution. In cases when the histogram is more normally distributed and the data is symmetric, a normal curve is better to overlay the plot.
+```
+
+
+
+e)  Now make your own histogram with well-chosen inputs and with a Normal overlay that fits better.  Would you say the data looks Normal?
+
+```{r, eval = TRUE}
+hist(bball$Team.Score, freq=FALSE)
+
+curve(dnorm(x, mean(bball$Team.Score), sd(bball$Team.Score)),
+    add = TRUE, col = "blue", lwd = 2)
+```
+
+***
+
+## Subsetting
+
+One of the most powerful qualities of **R** is the ability to select a subset of a dataset. Suppose we want to look only at games involving UNC or Duke.  We would need to figure out which rows of `bball` involve one of those teams, and then make a new dataset out of only those rows.  
+
+For this, we will use *booleans*, which are variables with the value `TRUE` or `FALSE`.  Play around with the following code until you feel comfortable with `==`, `>`, `<`, and `%in%` as well as `&` (and) and `|` (or).
+
+```{r, eval = TRUE}
+# booleans practice
+
+1 == 1
+1 == 2
+1 < 2
+
+1 == 1 | 1  > 2
+1 == 1 & 1 > 2
+
+```
+
+You can make up your own vector using the function `c( )`, which stands for "concatenate".  This is like making a new variable - the variable can contain anything you want, such as numbers, strings, booleans. Try the example below to make a vector and subset it. Note that we can use either `<-` or `=` to store information in a variable.
+
+```{r, eval = TRUE}
+
+vec <- c("cat", "dog", "horned toad", "Her Majesty Queen Elizabeth", "dog")
+vec
+
+# Some more booleans
+vec == "dog"
+"dog" == vec
+vec %in% c("dog", "cat")
+c("dog", "cat") %in% vec
+
+
+# Finding indices
+
+which(vec == "dog")
+which(vec %in% c("dog", "cat"))
+which(c("dog", "cat") %in% vec)
+
+# Subsetting
+new = vec[vec %in% c("dog", "cat")]
+new
+
+```
+
+***
+
+### Question 4:
+
+a) The following code will give you an error.  What happened?
+```{r, eval = FALSE}
+
+vec = c(1, 2, 3, "4")
+vec + 2
+
+```
+#The code returns an error because there exists a non-numeric arguement within the vector that is a string. A numeric value cannot be added to a string character. 
+
+```
+
+b) The following code will NOT give you an error?  What is going on here?
+```{r, eval = TRUE}
+
+vec = c(TRUE, FALSE, FALSE, TRUE)
+vec + 2
+
+```
+#The program set initial numeric values to boolean vectors. TRUE appears to be mapped to the numeric value 1, while FALSE is mapped to numeric value 0. 
+```
+
+c) Now we are ready to make a new dataset.  We'll get a list of booleans to tell us where UNC or Duke's games are, and use that to subset the datset `bball`.
+
+Try running each of the following lines of code.  None of them will make the datset we want.  What was the problem with each one?
+
+```{r, eval = FALSE}
+
+# Make new dataset with only UNC or Duke games
+
+
+#A
+my_subset = bball[Team == "North Carolina" | Team == "Duke", ]
+
+#B
+my_subset = bball[bball$Team == "North Carolina", bball$Team == "Duke"]
+
+#C
+my_subset = bball[bball$Team == "North Carolina" | bball$Team = "Duke", ]
+
+#D
+my_subset = bball[bball$Team == "North Carolina" & bball$Team == "Duke", ]
+
+#E
+unc_games = which(bball$Team == "North Carolina")
+my_subset = bball[unc_games | bball$Team == "Duke", ]
+
+#F
+my_subset = bball[bball$Team == "North Carolina" | bball$Team == "Duke"]
+```
+
+```
+In #A, the code calls Team instead of "bball$Team", which means Team is not a defined object and the desired column 'Team' cannot be called from the data. 
+In #B, there is no comma after "Duke", meaning the program is not able to return the rows containing the "North Carolina" and "Duke" condition.
+In #C, the condition requires two '=' which allows the code to search for the condition "Duke". Just one '=' sets the value bball$Team to "Duke", which is an invalid command.
+In #D, the condition calls the logical operator AND and thus the program creates a subset only with the rows contianing both "North Carolina" and "Duke" as the conditions. 
+In #E, the first value sets unc_games to return TRUE indices of the object "North Carolina". The subset then attempts to create a subset given unc_games or rows containing "Duke" from the original dataset. However this subset is invalid because the lengths of these resulting vectors is not the same and thus cannot create a new subset. 
+In #F, the code looks through the columns but cannot return rows where the condition is true due to the lack of a comma. 
+```
+
+d) Now write your own code to make the correct dataset.
+
+```{r, eval = TRUE}
+bball_subset = bball[bball$Team == "North Carolina" | bball$Team == "Duke", ]
+
+```
+
+***
+
+## Z-Scores and t-scores
+
+Alright, enough of that data wrangling.  Time to do some statistics.
+
+Check out `?Normal`.  These are some functions that will help us calculate probabilities about the Normal distribution. (No more using Table A!)  The most important ones are `pnorm` and `qnorm`.
+
+`pnorm(q)` will tell you the probability of a standard Normal being below the value `q`
+
+`qnorm(p)` will tell you the z-score that has area `p` below it on a standard Normal curve
+
+***
+
+### Question 5
+
+a) For each of the following lines of code, think about what the result will be **before** running the code.  **Draw a picture for each one to visualize what is going on with `pnorm` and `qnorm`.**
+
+```{r, eval = FALSE}
+# practice with Normal densities in R
+
+#i
+pnorm(0)
+qnorm(0)
+
+#ii
+pnorm(100)
+qnorm(100)
+
+#iii
+qnorm(pnorm(0))
+qnorm(pnorm(7))
+
+#iv
+pnorm(qnorm(0))
+pnorm(qnorm(0.5))
+
+#v
+pnorm(0, sd = 10)
+pnorm(0, mean = 1, sd = 10)
+
+#vi
+qnorm(0.05)
+qnorm(0.05, sd = 10)
+qnorm(0.05, mean = 1, sd = 10)
+
+```
+
+b) Why did you get an error in part (ii)?
+```
+qnorm() returns a quantitative value a takes a vector of probabilities of a normal distribution. The probability cannot exceed 1, and thereforee qnorm(100) does not return a number. 
+```
+
+***
+
+Now use this code to make a new variable for the total score of a game:
+
+```{r, eval = FALSE}
+# Make new variable
+bball$Total.Score = bball$Team.Score + bball$Opponent.Score
+```
+
+We will use *z-scores* and *t-scores* to think about whether a game is unusually high scoring.
+
+***
+
+### Question 6:
+
+a) As you may have noticed, the dataset `bball` actually displays each game twice: once for each team.  Make a new dataset with each game listed only once by subsetting `bball`.
+```{r, eval = TRUE}
+game_subset = bball[bball$Team.Result == "Win",]
+```
+
+b) On Feb 17, 2016, UNC played Duke.  Using the Normal distribution, what percent of games have higher scores than the UNC/Duke game?  (Assume that the mean and standard deviation of `Team.Score` are actually the *population* mean and standard deviation.)  
+```{r, eval = FALSE}
+uncduke_game = bball[bball$Team == "North Carolina" & bball$Date == "2/17/16",]
+pnorm(uncduke_game$Team.Score, mean(bball$Team.Score), sd(bball$Team.Score), lower.tail=FALSE)
+```
+
+c) What percentage of games in the dataset did we observe to be higher scoring than the UNC/Duke game?  The functions `sum( )` and `length( )` will help you answer this question.
+
+```{r, eval = TRUE}
+sum(bball$Team.Score > 73) / length(bball$Team.Score)
+```
+
+d)  What is the difference between what we did in (b) and (c)?  Do you think the Normal approximation is reasonable for this data?  Why or why not?
+```
+The function pnorm gives the area under the normal curve above a given value (q = 74), with the given mean and standard deviation. In (c) we calculated the probability empirically by determining the number of observations above 74 then dividing this number by the total sample size. A Normal approximation seems appropriate because the dataset shows an approximately normal distribution, with the mean Team.Score varying closely around 72.54. 
+```
+
+***
+
+Recall that *t-scores* are used instead of *z-scores* when the population standard deviation is unknown.  The functions `pt` and `qt` work almost same way as `pnorm` and `qnorm`, but for the t-distribution instead of the Normal.  However, be careful, and read `?pt` for help!  These functions don't let you enter the mean and standard deviation as input - you need to figure out what do about that!
+
+***
+
+### Question 7:
+Use all your new **R** skills to answer this question: Was the Feb 17th game between UNC and Duke particularly high scoring *for a UNC game*?
+
+```{r, eval = TRUE}
+unc_game = bball[bball$Team == "North Carolina",]
+pt(-0.63, 33, lower.tail = TRUE)
+#According to the derived distribution, because the value of the score of the 17th game was above the bottom 0.266 proportion of the distribution of all UNC game scores, this game was not a particularly high scoring UNC game. 
+```
+
+***
+
+## Confidence Intervals and Proportions
+
+You now have all the **R** knowledge you need to make some confidence intervals!  You may wish to go over your lecture notes for this section, especially to remind yourself how to deal with proportions.
+
+***
+
+### Question 8:
+
+a) Make a 95% confidence interval for the number of points UNC scores in a given game.  You will need to think about which **R** commands will give you critical values of the *t*-distribution, and how to use these to make a confidence interval.
+
+```{r, eval = TRUE}
+int = qnorm(.975)*(sd(unc_game$Team.Score)/sqrt(34))
+mean(unc_game$Team.Score) + int
+mean(unc_game$Team.Score) - int
+#CI = (78.70809, 85.82132)
+
+```
+
+b) What percentage of games did UNC win in 2015-2016?  Make a 95% confidence interval for their win percentage.
+
+
+```{r, eval = TRUE}
+unc_win = unc_game[unc_game$Team.Result == "Win",]
+p_hat = nrow(unc_win)/nrow(unc_game)
+p_hat
+z = qnorm(1-0.05/2)
+p_hat + z*sqrt(p_hat*(1-p_hat)/34)
+p_hat - z*sqrt(p_hat*(1-p_hat)/34)
+#CI = (69.53895, 95.16693)
+```
+
+***
+
+## Hypothesis Testing
+
+You have now had lots of practice learning to use a function by reading the documentation.  Part of the point of this course is for you to become familiar enough with **R** to learn new commands and functions without being shown how to use them.  This will make you a skillful (and hireable!) programmer in the future.
+
+Check out `?t.test` and `?prop.test`.  Figure out what these functions do, what input they take, etc. Then answer the following questions.
+
+***
+
+### Question 9:
+
+a) Does UNC tend to win more games than they lose?  That is, is there evidence at the 0.05 level that the "true" probability of UNC winning a given game in 2015-2016 is larger than 0.5?
+
+```{r, eval = TRUE}
+p = nrow(unc_win)/nrow(unc_game)
+z = (0.5-p)/sqrt(0.5*(1-0.5)/34)
+2*pnorm(z)
+#Because our p-value is 0.00016, which is less than the significance level of 0.05, the test is statistically significant and there is evidence that the "true" probability of UNC winning a given game in 2015-2016 is larger than 0.5.
+```
+
+b) Based on how many points they tend to score in a game, would you say UNC and UCLA were equally good teams? 
+
+```{r, eval = TRUE}
+ucla_game = bball[bball$Team == "UCLA",]
+mean(ucla_game$Team.Score)
+mean(unc_game$Team.Score)
+
+#Based on the average points scored across all games, UNC tends to score about 5 points higher than UCLA, making UNC the better team. 
+```
+
+c) Based on win percentage, would you say UNC and UCLA were equally good teams? 
+
+```{r, eval = TRUE}
+
+ucla_win = ucla_game[ucla_game$Team.Result == "Win",]
+nrow(unc_win)/nrow(unc_game)
+nrow(ucla_win)/nrow(ucla_game)
+
+#Based on the win percentage, UNC has an 82.35 percentage win rate while UCLA has a 46.88 percentage win rate, making UNC the better team.
+```
+
+***
+
+## Do your own analysis
+
+Now it's your turn to think like a Statistician.  
+
+Many sports fans believe that teams tend to play better when they are in their home arena, perhaps because they are more comfortable there or because they are energized by their fans.  This idea is called "Home Court Advantage".
+
+Based on the `bball` data, do you think there is any evidence of Home Court Advantage?  Be creative - think about different ways you might measure if a team is playing "better" at home.
+
+Explain and justify your answer.
+
+```{r, eval = FALSE}
+
+home_adv = bball[bball$Team.Result == "Win" & bball$Team.Location == "Home",]
+away_adv = bball[bball$Team.Result == "Win" & bball$Team.Location == "Away",]
+
+#By finding the subsets of the original data that contain the Team.Results and the Team.Location, we can conclude that a greater proportion (more than 50%) of games were won when the team played at their home arena versus when they played away from home. Based off of this, it is reasonable to conclude that the "Home Court Advantage" plays a role in the performance of team scores during games. 
+``
