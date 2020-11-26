@@ -1,7 +1,11 @@
 ---
 title: 'Case Study 1: College Basketball'
 author: "prepared by Kelly Bodwin"
-output: rmarkdown::github_document
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+  keep_md: true
 ---
 
 In this Case Study, you will refresh your memory of STOR 155 while you learn some basic commands and tools for analyzing data with **R**.  We'll be looking at some data from college basketball games last year.
@@ -10,7 +14,7 @@ Run the following **R** code to load the data into your RStudio and take a look 
 
 ## Summarizing data
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 # Load dataset
 bball = read.csv("basketball.csv")
 
@@ -45,7 +49,7 @@ ncol(bball) gives the number of columns in the dataset, while nrow(bball) gives 
 
 Sometimes, we will want to look at individual entries, rows, or columns of our data matrix.  We can do this using brackets `[ ]` after our dataset.  We can also look at a variables (columns) by name using the *$* symbol.  Try the following examples.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 # Look at a single row
 bball[123, ]
 
@@ -92,7 +96,7 @@ For example, type `?boxplot` into your **R** console.  A help page will pop up t
 
 Run the code below to make a boxplot of the team scores of college basketball games.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 
 # make boxplot of team scores
 boxplot(bball$Team.Score)
@@ -107,13 +111,13 @@ boxplot(bball$Team.Score)
 
 a) Now check out `?hist`, a function for making histograms.  Below is basic code to make a histogram of `Team.Scores`, and also code for the same histogram but with a lot of the optional input changed.  Mess around with these inputs until you understand what each is doing.   
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 
 # Boring histogram
 hist(bball$Team.Score)
 
 # Fancy histogram
-hist(bball$Team.Score, breaks = 5, main = "I am a title", xlab = "I am an x-axis label", col = "grey", freq = FALSE)
+hist(bball$Team.Score, breaks = 5, main = "I am a title", xlab = "I am an x-axis label", col = "grey", freq = TRUE)
 
 ```
 Explain in your own words what `breaks` and `freq` change about the histogram.
@@ -123,7 +127,7 @@ Explain in your own words what `breaks` and `freq` change about the histogram.
 
 b) The optional inputs `main`, `xlab`, `ylab`, and `col` are common to most plotting functions.  Use what you learned in (a) to make a boxplot of `Team.Scores` with proper axis labels and title.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 
 # make boxplot of team scores
 boxplot(bball$Team.Score, main = "Box Plot for Team Scores", xlab = "All Teams", ylab = "Scores", col = "grey")
@@ -131,7 +135,7 @@ boxplot(bball$Team.Score, main = "Box Plot for Team Scores", xlab = "All Teams",
 ```
 
 c) To check if the histogram is Normal, or to help visualize its shape, we might want to overlay a Normal curve on top of the histogram.  The code below will do so - but the curve doesn't fit very well.  
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 
 # Boring histogram
 hist(bball$Team.Score, freq = FALSE)
@@ -148,7 +152,7 @@ The function 'curve()' draws out the Normal curve overlaying the histogram, and 
 
 d) Alternatively, we can overlay a line that is a "smoothed" version of the data, as follows:
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 
 # overlay smoothed curve
 hist(bball$Team.Score, freq = FALSE)
@@ -167,7 +171,7 @@ The function 'lines()' is a generic function that takes coordinates from the giv
 
 e)  Now make your own histogram with well-chosen inputs and with a Normal overlay that fits better.  Would you say the data looks Normal?
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 hist(bball$Team.Score, freq=FALSE)
 
 curve(dnorm(x, mean(bball$Team.Score), sd(bball$Team.Score)),
@@ -182,7 +186,7 @@ One of the most powerful qualities of **R** is the ability to select a subset of
 
 For this, we will use *booleans*, which are variables with the value `TRUE` or `FALSE`.  Play around with the following code until you feel comfortable with `==`, `>`, `<`, and `%in%` as well as `&` (and) and `|` (or).
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 # booleans practice
 
 1 == 1
@@ -196,7 +200,7 @@ For this, we will use *booleans*, which are variables with the value `TRUE` or `
 
 You can make up your own vector using the function `c( )`, which stands for "concatenate".  This is like making a new variable - the variable can contain anything you want, such as numbers, strings, booleans. Try the example below to make a vector and subset it. Note that we can use either `<-` or `=` to store information in a variable.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 
 vec <- c("cat", "dog", "horned toad", "Her Majesty Queen Elizabeth", "dog")
 vec
@@ -236,7 +240,7 @@ vec + 2
 ```
 
 b) The following code will NOT give you an error?  What is going on here?
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 
 vec = c(TRUE, FALSE, FALSE, TRUE)
 vec + 2
@@ -285,7 +289,7 @@ In #F, the code looks through the columns but cannot return rows where the condi
 
 d) Now write your own code to make the correct dataset.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 bball_subset = bball[bball$Team == "North Carolina" | bball$Team == "Duke", ]
 
 ```
@@ -359,7 +363,7 @@ We will use *z-scores* and *t-scores* to think about whether a game is unusually
 ### Question 6:
 
 a) As you may have noticed, the dataset `bball` actually displays each game twice: once for each team.  Make a new dataset with each game listed only once by subsetting `bball`.
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 game_subset = bball[bball$Team.Result == "Win",]
 ```
 
@@ -371,7 +375,7 @@ pnorm(uncduke_game$Team.Score, mean(bball$Team.Score), sd(bball$Team.Score), low
 
 c) What percentage of games in the dataset did we observe to be higher scoring than the UNC/Duke game?  The functions `sum( )` and `length( )` will help you answer this question.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 sum(bball$Team.Score > 73) / length(bball$Team.Score)
 ```
 
@@ -389,7 +393,7 @@ Recall that *t-scores* are used instead of *z-scores* when the population standa
 ### Question 7:
 Use all your new **R** skills to answer this question: Was the Feb 17th game between UNC and Duke particularly high scoring *for a UNC game*?
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 unc_game = bball[bball$Team == "North Carolina",]
 pt(-0.63, 33, lower.tail = TRUE)
 #According to the derived distribution, because the value of the score of the 17th game was above the bottom 0.266 proportion of the distribution of all UNC game scores, this game was not a particularly high scoring UNC game. 
@@ -407,7 +411,7 @@ You now have all the **R** knowledge you need to make some confidence intervals!
 
 a) Make a 95% confidence interval for the number of points UNC scores in a given game.  You will need to think about which **R** commands will give you critical values of the *t*-distribution, and how to use these to make a confidence interval.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 int = qnorm(.975)*(sd(unc_game$Team.Score)/sqrt(34))
 mean(unc_game$Team.Score) + int
 mean(unc_game$Team.Score) - int
@@ -418,7 +422,7 @@ mean(unc_game$Team.Score) - int
 b) What percentage of games did UNC win in 2015-2016?  Make a 95% confidence interval for their win percentage.
 
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 unc_win = unc_game[unc_game$Team.Result == "Win",]
 p_hat = nrow(unc_win)/nrow(unc_game)
 p_hat
@@ -442,7 +446,7 @@ Check out `?t.test` and `?prop.test`.  Figure out what these functions do, what 
 
 a) Does UNC tend to win more games than they lose?  That is, is there evidence at the 0.05 level that the "true" probability of UNC winning a given game in 2015-2016 is larger than 0.5?
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 p = nrow(unc_win)/nrow(unc_game)
 z = (0.5-p)/sqrt(0.5*(1-0.5)/34)
 2*pnorm(z)
@@ -451,7 +455,7 @@ z = (0.5-p)/sqrt(0.5*(1-0.5)/34)
 
 b) Based on how many points they tend to score in a game, would you say UNC and UCLA were equally good teams? 
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 ucla_game = bball[bball$Team == "UCLA",]
 mean(ucla_game$Team.Score)
 mean(unc_game$Team.Score)
@@ -461,7 +465,7 @@ mean(unc_game$Team.Score)
 
 c) Based on win percentage, would you say UNC and UCLA were equally good teams? 
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 
 ucla_win = ucla_game[ucla_game$Team.Result == "Win",]
 nrow(unc_win)/nrow(unc_game)
